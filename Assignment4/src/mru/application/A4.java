@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -29,7 +32,9 @@ public class A4 {
 
 	private int topN = 4;
 	private int totalWordCount = 0;
+	private String FILE_PATH = "res/input1.txt";
 	private Scanner input = new Scanner(System.in);
+	HashMap<Avenger, Integer> map = new HashMap<>();
 
 	/* TODO:
 	 * Create the necessary hashMap and treeMap objects to keep track of the Avenger objects 
@@ -42,12 +47,12 @@ public class A4 {
 	 * TreeMap constructor. 
 	 */
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		A4 a4 = new A4();
 		a4.run();
 	}
 
-	public void run() {
+	public void run() throws IOException {
 		readInput();
 		createdOrderedTreeMaps();
 		printResults();
@@ -71,8 +76,9 @@ public class A4 {
 	/**
 	 * read the input stream and keep track how many times avengers are mentioned by
 	 * alias or last name.
+	 * @throws IOException 
 	 */
-	private void readInput() {
+	private void readInput() throws IOException {
 		/*
 		 * In a loop, while the scanner object has not reached end of stream, - read a
 		 * word. - clean up the word - if the word is not empty, add the word count. -
@@ -83,13 +89,15 @@ public class A4 {
 		 * newly created avenger to the hashMap, remember to set the frequency, and 
 		 * to keep track of the mention order
 		 */
-		
-		while(input.hasNext()) {
+		File file = new File(FILE_PATH);
+		Scanner scanner = new Scanner(file);
+		while(scanner.hasNext()) {
 			String word = input.next();
 			word = cleanWord(word);
 			
 			if(!word.isEmpty()) {
-				totalWordCount++;			
+				totalWordCount++;		
+				updateAvengerMap(word);
 			}
 		}
 
@@ -109,6 +117,19 @@ public class A4 {
 		return ret;
 	}
 
+	private void updateAvengerMap(String word) {
+		for (int i = 0; i < avengerRoster.length; i++) {
+			if(word.equals(avengerRoster[i][0]) || word.equals(avengerRoster[i][1]) || word.equals(avengerRoster[i][2])){
+				Avenger newAvenger = new Avenger();
+				newAvenger.setHeroAlias(avengerRoster[i][0]);
+				newAvenger.setHeroName(avengerRoster[i][1]);
+				newAvenger.setPerformer(avengerRoster[i][2]);
+				
+//				Avenger a = foundA(word);
+				
+			}
+		}
+	}
 	/**
 	 * print the results
 	 */
