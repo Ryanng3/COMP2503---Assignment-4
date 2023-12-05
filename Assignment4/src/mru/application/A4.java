@@ -2,6 +2,8 @@ package mru.application;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
@@ -34,7 +36,7 @@ public class A4 {
 	private int totalWordCount = 0;
 	private String FILE_PATH = "res/input1.txt";
 	private Scanner input = new Scanner(System.in);
-	HashMap<Avenger, Integer> map = new HashMap<>();
+	Map<String, Avenger> map = new HashMap<>();
 
 	/* TODO:
 	 * Create the necessary hashMap and treeMap objects to keep track of the Avenger objects 
@@ -92,12 +94,11 @@ public class A4 {
 		File file = new File(FILE_PATH);
 		Scanner scanner = new Scanner(file);
 		while(scanner.hasNext()) {
-			String word = input.next();
+			String word = scanner.next();
 			word = cleanWord(word);
 			
 			if(!word.isEmpty()) {
 				totalWordCount++;		
-				updateAvengerMap(word);
 			}
 		}
 
@@ -116,20 +117,7 @@ public class A4 {
 			ret = next.toLowerCase().trim().replaceAll("[^a-z]", "");
 		return ret;
 	}
-
-	private void updateAvengerMap(String word) {
-		for (int i = 0; i < avengerRoster.length; i++) {
-			if(word.equals(avengerRoster[i][0]) || word.equals(avengerRoster[i][1]) || word.equals(avengerRoster[i][2])){
-				Avenger newAvenger = new Avenger();
-				newAvenger.setHeroAlias(avengerRoster[i][0]);
-				newAvenger.setHeroName(avengerRoster[i][1]);
-				newAvenger.setPerformer(avengerRoster[i][2]);
-				
-//				Avenger a = foundA(word);
-				
-			}
-		}
-	}
+	
 	/**
 	 * print the results
 	 */
@@ -149,12 +137,13 @@ public class A4 {
 		
 		
 		System.out.println("Total number of words: " + totalWordCount);
-		//System.out.println("Number of Avengers Mentioned: " + ??);
+		System.out.println("Number of Avengers Mentioned: " + map.size());
 		System.out.println();
 
 		System.out.println("All avengers in the order they appeared in the input stream:");
 		// Todo: Print the list of avengers in the order they appeared in the input
 		// Make sure you follow the formatting example in the sample output
+
 		System.out.println();
 
 		System.out.println("Top " + topN + " most popular avengers:");
