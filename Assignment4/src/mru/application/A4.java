@@ -120,10 +120,6 @@ public class A4 {
 	}
 	
 	private String cleanWord(String next) {
-		// First, if there is an apostrophe, the substring
-		// before the apostrophe is used and the rest is ignored.
-		// Words are converted to all lowercase.
-		// All other punctuation and numbers are skipped.
 		String ret;
 		int inx = next.indexOf('\'');
 		if (inx != -1)
@@ -208,26 +204,19 @@ public class A4 {
 		System.out.println();
 
 		System.out.println("All avengers in the order they appeared in the input stream:");
-		// Todo: Print the list of avengers in the order they appeared in the input
-		// Make sure you follow the formatting example in the sample output
+		
 		for (Entry<Avenger, String> entry : mentionOrderMap.entrySet()) {
             System.out.println(entry.getKey());
         }
 		System.out.println();
 
 		System.out.println("Top " + topN + " most popular avengers:");
-		// Todo: Print the most popular avengers, see the instructions for tie breaking
-		// Make sure you follow the formatting example in the sample output
 		printTopN(popularAvengerMap);
 
 		System.out.println();
 
 		System.out.println("Top " + topN + " most popular performers:");
-		// Todo: Print the most popular performer, see the instructions for tie breaking
-		// Make sure you follow the formatting example in the sample output
-//		for (Entry<Avenger, Avenger> entry : popularPerformerMap.entrySet()) {
-//            System.out.println(entry.getKey() + ": " + entry.getValue());
-//        }
+
 		printTopN(popularPerformerMap);
 		
 		System.out.println();
