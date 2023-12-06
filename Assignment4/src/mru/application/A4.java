@@ -5,12 +5,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.TreeMap;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * COMP 2503 Fall 2023 Assignment 4
@@ -34,9 +31,15 @@ public class A4 {
 
 	private int topN = 4;
 	private int totalWordCount = 0;
-	private String FILE_PATH = "res/input1.txt";
+	private String FILE_PATH = "res/input4.txt";
 	private Scanner input = new Scanner(System.in);
-	Map<String, Avenger> map = new HashMap<>();
+	Map<String, Avenger> hashMap = new HashMap<>();
+	TreeMap<Avenger, String> alphabeticalMap = new TreeMap<>();
+	TreeMap<Avenger, String> mentionOrderMap = new TreeMap<>(new AvengerMentionComparator());
+	TreeMap<Avenger, String> popularAvengerMap = new TreeMap<>(new AvengerComparator());
+	TreeMap<Avenger, String> popularPerformerMap = new TreeMap<>(new PerformerComparator());
+
+
 
 	/* TODO:
 	 * Create the necessary hashMap and treeMap objects to keep track of the Avenger objects 
@@ -73,6 +76,17 @@ public class A4 {
 		 * the 'key set' of the HashMap and use the next() method in a loop
 		 * to get each word object. 
 		 */		
+		 for (Entry<String, Avenger> entry : hashMap.entrySet()) {
+		        Avenger foundA = entry.getValue();
+		        alphabeticalMap.put(foundA, foundA.getHeroAlias());
+		        mentionOrderMap.put(foundA, foundA.getHeroAlias());
+		        popularAvengerMap.put(foundA, foundA.getHeroAlias());
+		        popularPerformerMap.put(foundA, foundA.getHeroAlias());
+
+		        
+		        
+		 }
+		 
 	}
 
 	/**
@@ -99,6 +113,7 @@ public class A4 {
 			
 			if(!word.isEmpty()) {
 				totalWordCount++;		
+				updateAvengerMap(word);
 			}
 		}
 
@@ -118,6 +133,58 @@ public class A4 {
 		return ret;
 	}
 	
+	private void updateAvengerMap(String word) {
+		  for (int i = 0; i < avengerRoster.length; i++) {
+		        if (word.equals(avengerRoster[i][0]) || word.equals(avengerRoster[i][1]) || word.equals(avengerRoster[i][2])) {
+		            Avenger newA = new Avenger();
+		            newA.setHeroAlias(avengerRoster[i][0]);
+		            newA.setHeroName(avengerRoster[i][1]);
+		            newA.setPerformer(avengerRoster[i][2]);
+
+		            Avenger a = findA(word);
+
+		            if (a != null) {
+		                if (word.equals(avengerRoster[i][0]))
+		                    a.setAliasFreq(a.getAliasFreq() + 1);
+		                else if (word.equals(avengerRoster[i][1]))
+		                    a.setNameFreq(a.getNameFreq() + 1);
+		                else if (word.equals(avengerRoster[i][2]))
+		                    a.setPerformerFreq(a.getPerformerFreq() + 1);
+		            } else {
+		                a = newA;
+
+		                if (word.equals(avengerRoster[i][0]))
+		                    a.setAliasFreq(1);
+		                else if (word.equals(avengerRoster[i][1]))
+		                    a.setNameFreq(1);
+		                else if (word.equals(avengerRoster[i][2]))
+		                    a.setPerformerFreq(1);
+		                
+		                a.setMentionOrder(hashMap.size() + 1);
+
+
+		                hashMap.put(a.getHeroAlias(), a);
+
+		            }
+		        }
+		    }
+
+	}
+	
+	
+	private Avenger findA(String word) {
+	    for (Entry<String, Avenger> entry : hashMap.entrySet()) {
+	        Avenger foundA = entry.getValue();
+
+	        if (foundA.getHeroName().equalsIgnoreCase(word) ||
+	            foundA.getHeroAlias().equalsIgnoreCase(word) ||
+	            foundA.getPerformer().equalsIgnoreCase(word)) {
+	            return foundA;
+	        }
+	    }
+	    return null;
+	}
+
 	/**
 	 * print the results
 	 */
@@ -137,28 +204,51 @@ public class A4 {
 		
 		
 		System.out.println("Total number of words: " + totalWordCount);
-		System.out.println("Number of Avengers Mentioned: " + map.size());
+		System.out.println("Number of Avengers Mentioned: " + alphabeticalMap.size());
 		System.out.println();
 
 		System.out.println("All avengers in the order they appeared in the input stream:");
 		// Todo: Print the list of avengers in the order they appeared in the input
 		// Make sure you follow the formatting example in the sample output
-
+		for (Entry<Avenger, String> entry : mentionOrderMap.entrySet()) {
+            System.out.println(entry.getKey());
+        }
 		System.out.println();
 
 		System.out.println("Top " + topN + " most popular avengers:");
 		// Todo: Print the most popular avengers, see the instructions for tie breaking
 		// Make sure you follow the formatting example in the sample output
+		printTopN(popularAvengerMap);
+
 		System.out.println();
 
 		System.out.println("Top " + topN + " most popular performers:");
 		// Todo: Print the most popular performer, see the instructions for tie breaking
 		// Make sure you follow the formatting example in the sample output
+//		for (Entry<Avenger, Avenger> entry : popularPerformerMap.entrySet()) {
+//            System.out.println(entry.getKey() + ": " + entry.getValue());
+//        }
+		printTopN(popularPerformerMap);
+		
 		System.out.println();
 
 		System.out.println("All mentioned avengers in alphabetical order:");
 		// Todo: Print the list of avengers in alphabetical order
+		for (Entry<Avenger, String> entry : alphabeticalMap.entrySet()) {
+            System.out.println(entry.getKey());
+        }
 		System.out.println();
+	}
+	
+	private void printTopN(TreeMap<Avenger, String> map) {
+		Iterator<Entry<Avenger, String>> i = map.entrySet().iterator();
+		int count = 0;
+		while(i.hasNext() && count < topN) {
+			Map.Entry<Avenger, String> e = i.next();
+			System.out.println(e.getKey());
+			
+			count++;
+		}
 	}
 }
 
