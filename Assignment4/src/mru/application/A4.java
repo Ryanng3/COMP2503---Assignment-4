@@ -37,7 +37,7 @@ public class A4 {
 	TreeMap<Avenger, String> mentionOrderMap = new TreeMap<>(new AvengerMentionComparator());
 	TreeMap<Avenger, String> popularAvengerMap = new TreeMap<>(new AvengerComparator());
 	TreeMap<Avenger, String> popularPerformerMap = new TreeMap<>(new PerformerComparator());
-	 
+	
 	/**
 	 * Main Method to run the program
 	 * @param args
