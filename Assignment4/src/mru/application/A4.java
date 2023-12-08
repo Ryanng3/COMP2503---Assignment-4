@@ -31,7 +31,6 @@ public class A4 {
 
 	private int topN = 4;																	//Constants and Variables
 	private int totalWordCount = 0;
-	private String FILE_PATH = "res/input4.txt";
 	private Scanner input = new Scanner(System.in);
 	Map<String, Avenger> hashMap = new HashMap<>();
 	TreeMap<Avenger, String> alphabeticalMap = new TreeMap<>();
@@ -43,7 +42,7 @@ public class A4 {
 	 * Main Method to run the program
 	 * @param args
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		A4 a4 = new A4();
 		a4.run();
 	}
@@ -51,7 +50,7 @@ public class A4 {
 	/**
 	 * Method to run the program
 	 */
-	public void run() throws IOException {
+	public void run() {
 		readInput();
 		createdOrderedTreeMaps();
 		printResults();
@@ -75,11 +74,10 @@ public class A4 {
 	/**
 	 * read the input stream and keep track how many times avengers are mentioned by alias or last name
 	 */
-	private void readInput() throws IOException {
-		File file = new File(FILE_PATH);
-		Scanner scanner = new Scanner(file);
-		while(scanner.hasNext()) {
-			String word = scanner.next();
+	private void readInput() {
+
+		while(input.hasNext()) {
+			String word = input.next();
 			word = cleanWord(word);
 			
 			if(!word.isEmpty()) {
